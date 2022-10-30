@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Removing old talos configuration files"
-rm talosconfig controlplane.yaml worker.yaml
+rm talosconfig kubeconfig controlplane.yaml worker.yaml 
 
 echo "Setting ip-addresses to NODE* variables"
 NODE1=$(virsh domifaddr talos_control-plane-node-1|grep ipv4 |awk '{ print $4 }' | cut -d/ -f1)
@@ -22,7 +22,9 @@ talosctl -n ${NODE1} disks --insecure
 
 echo "Generating new talos kubernetes cluster configuration"
 talosctl gen config my-cluster https://192.168.121.5:6443 --install-disk /dev/vda \
-  --config-patch-control-plane @cp.yaml
+  --config-patch @all.yaml \
+  --config-patch-control-plane @cp.yaml \
+  --config-patch-worker @wk.yaml
 
 echo "Applying config to NODE1"
 talosctl -n ${NODE1} apply-config --insecure --file controlplane.yaml
@@ -31,7 +33,7 @@ echo "Exporting TALOSCONFIG"
 export TALOSCONFIG=$(realpath ./talosconfig)
 
 echo "Settings endpoints"
-talosctl config endpoint ${NODE1} ${NODE2} ${NODE3} ${NODE4} ${NODE5}
+talosctl config endpoint ${NODE1} ${NODE2} ${NODE3} ${NODE4} ${NODE5} ${NODE6}
 
 echo "Bootstrap NODE1"
 talosctl -n ${NODE1} bootstrap

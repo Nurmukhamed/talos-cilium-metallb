@@ -1,0 +1,24 @@
+- op: replace
+  path: /machine/network
+  value:
+    interfaces:
+      - interface: eth0
+- op: replace
+  path: /machine/network/interfaces/0
+  value:
+    interface: eth0
+    dhcp: true
+    mtu: 1500
+- op: add
+  path: /machine/network/interfaces/0/vip
+  value:
+    ip: 192.168.121.5
+- op: add
+  path: /cluster/proxy
+  value:
+    mode: ipvs
+    disabled: false
+- op: add
+  path: /cluster/network/cni
+  value:
+    name: none

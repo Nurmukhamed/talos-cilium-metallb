@@ -7,7 +7,9 @@ helm template --namespace kube-system cilium cilium/cilium \
     --set cluster.id=0 \
     --set cluster.name=my-cluster \
     --set encryption.nodeEncryption=false \
-    --set kubeProxyReplacement=disabled \
+    --set k8sServiceHost=${KUBERNETES_API_SERVER_ADDRESS} \
+    --set k8sServicePort=${KUBERNETES_API_SERVER_PORT} \
+    --set kubeProxyReplacement=strict \
     --set operator.replicas=1 \
     --set serviceAccounts.cilium.name=cilium \
     --set serviceAccounts.operator.name=cilium-operator \

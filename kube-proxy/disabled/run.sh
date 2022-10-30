@@ -23,8 +23,8 @@ talosctl -n ${NODE1} disks --insecure
 echo "Generating new talos kubernetes cluster configuration"
 talosctl gen config my-cluster https://192.168.121.5:6443 --install-disk /dev/vda \
   --config-patch @all.yaml \
-  --config-patch-control-plane @cp.yaml \
-  --config-patch-worker @wk.yaml
+  --config-patch-control-plane @../../cp.yaml \
+  --config-patch-worker @../../wk.yaml
 
 echo "Applying config to NODE1"
 talosctl -n ${NODE1} apply-config --insecure --file controlplane.yaml
@@ -58,4 +58,3 @@ export KUBECONFIG=$(realpath ./kubeconfig)
 
 echo "Get kubernetes cluster list of nodes"
 kubectl get node -owide
-

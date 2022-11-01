@@ -58,3 +58,29 @@ export KUBECONFIG=$(realpath ./kubeconfig)
 
 echo "Get kubernetes cluster list of nodes"
 kubectl get node -owide
+
+echo "Installing cilium cni."
+kubectl apply -f ./cilium.yaml
+
+echo "Looking for pod status."
+kubectl -n kube-system get pods
+
+echo "Installing metallb."
+kubectl apply -f ../../manifests/metallb-native.yaml
+
+echo "Wait until all metallb pods will be ready."
+kubectl -n metallb-system get pods
+
+echo "Setup ip address pool."
+kubectl apply -f ../../manifests/metallb-addresses.yaml
+
+echo "Installing traefik ingress controller."
+kubectl create ns traefik
+kubectl -n traefik apply -f ../../manifests/traefik.yaml
+
+echo "Get metallb assigned address for traefik service."
+kubectl -n traefik get svc
+
+echo "Ping address and curl webserver on this address."
+ping 192.168.121.15 -c 3
+curl http://192.168.121.15

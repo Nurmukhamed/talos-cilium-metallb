@@ -109,3 +109,10 @@ rpc error: code = PermissionDenied desc = no request forwarding
 No resources found
 ```
 
+## Destroy
+
+Destroy cluster when finished work.
+
+```
+vagrant destroy -f
+```
